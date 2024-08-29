@@ -182,20 +182,25 @@ class TLN(keras.Model):
 
         # Calculate hidden sizes if not provided
         if self.hidden_sizes is None:
-            self.hidden_sizes = [
-                int(self.input_features - (i + 1) * (self.output_features - self.input_features) / self.hidden_layers)
-                for i in range(self.hidden_layers)
-            ]
+            if self.input_features > self.output_features:
+                self.hidden_sizes = [
+                    int(self.input_features - (i + 1) * (self.output_features - self.input_features) / self.hidden_layers)
+                    for i in range(self.hidden_layers)
+                ]
+            else:
+                self.hidden_sizes = [
+                    int(self.output_features - (i + 1) * (self.input_features - self.output_features) / self.hidden_layers)
+                    for i in range(self.hidden_layers)
+                ]
         elif len(self.hidden_sizes) != self.hidden_layers:
             raise ValueError(f"Received {len(self.hidden_sizes)} values in hidden_sizes while having {self.hidden_layers} hidden layers. Please provide the same number of values.")
-
+        
         # Define layers
         for i in range(self.hidden_layers):
             if i == self.hidden_layers - 1:
                 hidden_size = self.output_features
             else:
                 hidden_size = self.hidden_sizes[i]
-            
             if self.use_convolution:
                 self.layers_list.append(SequentialDense(
                     end_features=hidden_size,
