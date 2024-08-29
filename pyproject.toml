@@ -3,8 +3,8 @@ requires = [ "poetry-core",]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "tln" 
-version = "0.1.0" 
+name = "temporal_linear_network" 
+version = "0.1.1" 
 description = "Temporal Linear Network"
 authors = [ "Rémi Genet", "Hugo Inzirillo"]  
 readme = "README.md"  
