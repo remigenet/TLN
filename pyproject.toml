@@ -4,14 +4,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "temporal_linear_network" 
-version = "0.1.1" 
+version = "0.1.2" 
 description = "Temporal Linear Network"
 authors = [ "Rémi Genet", "Hugo Inzirillo"]  
 readme = "README.md"  
 packages = [{include = "tln"}]  
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
+python = ">=3.9,<3.13"
 keras = ">=3.0.0,<4.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -28,5 +28,7 @@ testpaths = ["tests"]
 filterwarnings = [
     "ignore:Can't initialize NVML:UserWarning",
     "ignore:jax.xla_computation is deprecated:DeprecationWarning",
-    "ignore::DeprecationWarning:jax._src.dtypes"
+    "ignore::DeprecationWarning:jax._src.dtypes",
+    "ignore:Type google._upb._message.MessageMapContainer uses PyType_Spec with a metaclass that has custom tp_new:DeprecationWarning:importlib",
+    "ignore:Type google._upb._message.ScalarMapContainer uses PyType_Spec with a metaclass that has custom tp_new:DeprecationWarning:importlib",
 ]
