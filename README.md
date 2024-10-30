@@ -1,6 +1,6 @@
 # TLN: Temporal Linear Network
 
-This is the original implementation of the [paper]().
+This is the original implementation of the [paper](https://arxiv.org/abs/2410.21448).
 
 TLN (Temporal Linear Network) is a neural network architecture that extends the capabilities of linear models while maintaining interpretability and computational efficiency. TLN is designed to effectively capture both temporal and feature-wise dependencies in multivariate time series data. Our approach is a variant of TSMixer that maintains strict linearity throughout its architecture. It removes activation functions, introduces specialized kernel initializations, and incorporates dilated convolutions to handle various time scales, all while preserving the linear nature of the model. Unlike transformer-based models that may lose  temporal information due to their permutation-invariant nature, TLN explicitly preserves and leverages the temporal structure of the input data. A key innovation of TLN is its ability to compute an equivalent linear model, offering a level of interpretability not found in more complex architectures like TSMixer. This feature allows for seamless conversion between the full TLN model and its linear equivalent, facilitating both training flexibility and inference optimization.
 
@@ -120,6 +120,17 @@ model = keras.Sequential([
     keras.layers.Dense(1),  # For multivariate to univariate predictions
     keras.layers.Flatten()
 ])
+```
+
+Please cite our work if you use this repo:
+
+```
+@article{genet2024tln,
+  title={A Temporal Linear Network for Time Series Forecasting},
+  author={Genet, Remi and Inzirillo, Hugo},
+  journal={arXiv preprint arXiv:2410.21448},
+  year={2024}
+}
 ```
 
 Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
