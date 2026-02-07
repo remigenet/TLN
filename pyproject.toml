@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "temporal_linear_network" 
-version = "0.1.2" 
+version = "0.1.3" 
 description = "Temporal Linear Network"
 authors = [ "Rémi Genet", "Hugo Inzirillo"]  
 readme = "README.md"  

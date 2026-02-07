@@ -7,6 +7,7 @@ import keras
 from keras.layers import Layer, Dense, AveragePooling1D
 
 
+@keras.utils.register_keras_serializable(package="tln", name="CLinear")
 class CLinear(Layer):
     """
     C for classic
@@ -15,10 +16,11 @@ class CLinear(Layer):
     def __init__(self, pred_len, individual=False, **kwargs):
         super().__init__(**kwargs)
         self.pred_len = pred_len
+        self.individual = individual
         self.Linear = Dense(self.pred_len)
 
     def build(self, input_shape):
-        
+
         super().build(input_shape)
 
     def call(self, x):
@@ -26,9 +28,22 @@ class CLinear(Layer):
         x = keras.ops.transpose(x, [0, 2, 1])
         x = self.Linear(x)
         x = keras.ops.transpose(x, [0, 2, 1])
-        
+
         return x # [Batch, Output length, Channel]
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'pred_len': self.pred_len,
+            'individual': self.individual,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+@keras.utils.register_keras_serializable(package="tln", name="NLinear")
 class NLinear(Layer):
     """
     N for Normalized
@@ -62,7 +77,20 @@ class NLinear(Layer):
         
         return x + last_seq# [Batch, Output length, Channel]
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'pred_len': self.pred_len,
+            'individual': self.individual,
+        })
+        return config
 
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+
+@keras.utils.register_keras_serializable(package="tln", name="MovingAvg")
 class MovingAvg(Layer):
     def __init__(self, kernel_size, stride=1, **kwargs):
         super(MovingAvg, self).__init__(**kwargs)
@@ -78,9 +106,23 @@ class MovingAvg(Layer):
         x = keras.ops.concatenate([front, x, end], axis=1)
         return self.avg(x)
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'kernel_size': self.kernel_size,
+            'stride': self.stride,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+@keras.utils.register_keras_serializable(package="tln", name="SeriesDecomp")
 class SeriesDecomp(Layer):
     def __init__(self, kernel_size, **kwargs):
         super(SeriesDecomp, self).__init__(**kwargs)
+        self.kernel_size = kernel_size
         self.moving_avg = MovingAvg(kernel_size, stride=1)
 
     def call(self, x):
@@ -88,6 +130,18 @@ class SeriesDecomp(Layer):
         res = x - moving_mean
         return res, moving_mean
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'kernel_size': self.kernel_size,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+@keras.utils.register_keras_serializable(package="tln", name="DLinear")
 class DLinear(Layer):
     def __init__(self, pred_len, individual=False, **kwargs):
         super().__init__(**kwargs)
@@ -123,3 +177,15 @@ class DLinear(Layer):
             trend_output = self.linear_trend(trend_init)
         
         return keras.ops.transpose(seasonal_output + trend_output, (0, 2, 1))
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'pred_len': self.pred_len,
+            'individual': self.individual,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)

@@ -7,6 +7,7 @@ from keras.layers import Layer, Dense, Conv1D, Flatten, Input
 from typing import List, Optional, Union
 
 
+@keras.utils.register_keras_serializable(package="tln", name="SequentialDense")
 class SequentialDense(Layer):
     """
     A custom layer that performs sequential dense operations.
@@ -99,6 +100,7 @@ class SequentialDense(Layer):
         config['kernel_regularizer'] = keras.regularizers.get(config['kernel_regularizer'])
         return cls(**config)
 
+@keras.utils.register_keras_serializable(package="tln", name="LinearLayer")
 class LinearLayer(Layer):
     """
     A custom layer that applies a linear transformation using pre-computed weights and biases.
@@ -134,6 +136,11 @@ class LinearLayer(Layer):
         })
         return config
 
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+@keras.utils.register_keras_serializable(package="tln", name="TLN")
 class TLN(keras.Model):
     """
     A custom model that applies a series of linear transformations to the input.
